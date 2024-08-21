@@ -8,6 +8,8 @@ Git cheat sheet
   - [Table of Contents](#table-of-contents)
     - [Most Used Commands](#most-used-commands)
   - [SSH and GPG config](#ssh-and-gpg-config)
+    - [SSH](#ssh)
+    - [GPG](#gpg)
 
 ### Most Used Commands
 
@@ -37,3 +39,59 @@ Git cheat sheet
   	```bash
   	git config --global user.email "github_commit_email@users.noreply.github.com" ; git config --global user.name "change_me"
   	```
+
+
+### SSH
+
+- Restart SSH:
+  `sudo systemctl restart sshd`
+
+- SSH version:
+  `ssh -V`
+
+- man files:
+  `man sshd_config`
+
+- Ciphers:
+  `ssh -Q cipher`
+
+- Copy public key to remote server if we have access using password:
+  `ssh-copy-id -i <path to <key>.pub <user>@server`
+
+- SSH option to avoid checking the host key and to not add the host to our known_host file:
+  `-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null`
+
+- Grep SSH option, for example keep alive:
+  `ssh -TG git@github.com |grep -i alive`
+
+- Remove passphrase from ssh key
+  `ssh-keygen -p -f <key>`
+
+### GPG
+
+- Generate a GPG Key
+
+  `gpg --full-generate-key`
+
+  >note: you can create multiple key, just make sure to add a distinc name, email and comment in each one so is easier to recognize each key.
+
+- List public GPG keys
+  `gpg --list-keys`
+
+- List private GPG keys
+  `gpg --list-secret-keys`
+
+- Export public key
+  `gpg --export -a <email address associated to the gpg key> > pub`
+
+- Export private key
+  `gpg --export-secret-key -a <email address associated to the gpg ato> > mykey@example.com_gpg_private.key`
+
+- Import public/private key (For private keys the passphrase will be asked)
+  g`pg --import public.key`
+
+- List public keys
+  `gpg --list-public-keys`
+
+- List private keys
+  `gpg --list-secret-keys`
