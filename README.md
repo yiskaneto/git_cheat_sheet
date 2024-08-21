@@ -10,6 +10,8 @@ Git cheat sheet
   - [SSH and GPG config](#ssh-and-gpg-config)
     - [SSH](#ssh)
     - [GPG](#gpg)
+    - [GIT with GPG to have verify commits](#git-with-gpg-to-have-verify-commits)
+  - [Telling Git about your signing key](#telling-git-about-your-signing-key)
 
 ### Most Used Commands
 
@@ -95,3 +97,58 @@ Git cheat sheet
 
 - List private keys
   `gpg --list-secret-keys`
+
+
+### GIT with GPG to have verify commits
+
+https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key
+
+1. Generate new gpg key:
+	`gpg --full-generate-key`
+
+1. List the long form of the GPG keys for which you have both a public and private key. A private key is required for signing commits or tags:
+	`gpg --list-secret-keys --keyid-format=long`
+
+1. From the list of GPG keys, copy the long form of the GPG key ID you'd like to use. In this example, the GPG key ID is `3BB5C34371567XF2`:
+
+	```bash
+	gpg --list-secret-keys --keyid-format=long
+	/Users/hubot/.gnupg/secring.gpg
+	------------------------------------
+	sec   4096R/3BB5C34371567XF2 2016-03-10 [expires: 2017-03-10]
+	uid                          Hubot <hubot@example.com>
+	ssb   4096R/4BB6D45482678BE3 2016-03-10
+	```
+2. Paste the text below, substituting in the GPG key ID you'd like to use. In this example, the GPG key ID is `3BB5C34371567XF2`:
+
+	```bash
+	gpg --armor --export 3AA5C34371567BD2
+	# Prints the GPG key ID, in ASCII armor format
+
+	# To export the secret use:
+	gpg --armor --export 3AA5C34371567BD2
+	```
+
+3. Add your GPG public key to Github
+
+## Telling Git about your signing key
+
+1. If you have previously configured Git to use a different key format when signing with --gpg-sign, unset this configuration so the default format of openpgp will be used.
+	`git config --global --unset gpg.format`
+
+1. To set your primary GPG signing key in Git, paste the text below, substituting in the GPG primary key ID you'd like to use. In this example, the GPG key ID is the one from before `3AA5C34371567BD2`:
+	`git config --global user.signingkey 3BB5C34371567XF2`
+
+1. Optionally, to configure Git to sign all commits by default, enter the following command:
+	`git config --global commit.gpgsign true`
+
+1. Finally, add your GPG key to your .bashrc startup file:
+	```bash
+	[ -f ~/.bashrc ] && echo 'export GPG_TTY=$(tty)' >> ~/.bashrc
+	source ~/.bashrc
+	```
+1. If there's another user set in the global configuration then explicitly set the correct username and email:
+2.
+	```bash
+	git config --local user.email "github_commit_email@users.noreply.github.com" ; git config --local user.name "change_me" ; git config --local --unset gpg.format ; git config --local user.signingkey 3BB5C34371567XF2
+  ```
