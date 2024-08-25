@@ -205,26 +205,26 @@ https://medium.com/@davidpiegza/using-pass-in-a-team-1aa7adf36592
     `pass insert random_folder/NEW_S3_BUCKET`
     `pass insert random_folder/OLD_S3_BUCKET`
 
-1. Add multiple secrets into 1 secret
-`pass insert -m random_folder/AWS_ENV_VARS`
+- Add multiple secrets into 1 secret
+    `pass insert -m random_folder/AWS_ENV_VARS`
 
-1. Following the example on point 3 you can now export the variable referencing the values stored on Pass
+- Following the example on point 3 you can now export the variable referencing the values stored on Pass
     `export AWS_REGION=$(pass random_folder/AWS_REGION)`
     `export TENANT=$(pass random_folder/DEMO_TENANT)`
     `export AWS_ACCESS_KEY=$(pass random_folder/AWS_ACCESS_KEY)`
     `export AWS_SECRET_ACCESS_KEY=$(pass random_folder/AWS_SECRET_ACCESS_KEY)`
     `export GITHUB_OAUTH_TOKEN=$(pass random_folder/GITHUB_OAUTH_TOKEN)`
 
-Now you can export the variables using eval
-`eval $(pass random_folder/AWS_ENV_VARS)`
+- Now you can export the variables using eval
+    `eval $(pass random_folder/AWS_ENV_VARS)`
 
-Retrieving password
-`pass random_folder/AWS_ACCOUNT_NUMBER`
+- Retrieving password
+    `pass random_folder/AWS_ACCOUNT_NUMBER`
 
-Edit passwords:
-`pass edit aws_env_vars`
+- Edit passwords:
+    `pass edit aws_env_vars`
 
 
 ### Clone existing pass repos
 
-1. mkdir -p  ~/.password-store/
+- mkdir -p  ~/.password-store/
