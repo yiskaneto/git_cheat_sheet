@@ -9,9 +9,12 @@ Git cheat sheet
     - [Most Used Commands](#most-used-commands)
   - [SSH and GPG config](#ssh-and-gpg-config)
     - [SSH](#ssh)
-    - [GPG](#gpg)
+  - [GPG](#gpg)
+    - [Reduce GPG passphrase prompts](#reduce-gpg-passphrase-prompts)
     - [GIT with GPG to have verify commits](#git-with-gpg-to-have-verify-commits)
-  - [Telling Git about your signing key](#telling-git-about-your-signing-key)
+    - [Telling Git about your signing key](#telling-git-about-your-signing-key)
+  - [Pass Basic Tutorial](#pass-basic-tutorial)
+    - [Clone existing pass repos](#clone-existing-pass-repos)
 
 ### Most Used Commands
 
@@ -42,7 +45,6 @@ Git cheat sheet
   	git config --global user.email "github_commit_email@users.noreply.github.com" ; git config --global user.name "change_me"
   	```
 
-
 ### SSH
 
 - Restart SSH:
@@ -69,7 +71,7 @@ Git cheat sheet
 - Remove passphrase from ssh key
   `ssh-keygen -p -f <key>`
 
-### GPG
+## GPG
 
 - Generate a GPG Key
 
@@ -98,6 +100,32 @@ Git cheat sheet
 - List private keys
   `gpg --list-secret-keys`
 
+
+### Reduce GPG passphrase prompts
+
+When you installed GnuPG, it also installed and runs a service named gpg-agent.exe that is responsible for caching this passphrase so you’re not prompted for it on every single commit. The default TTL for a cached passphrase however is 10 minutes. This is quite short for me, I’m not making commits every 10 minutes so it just ended up feeling like I was prompted for this passphrase every time. gpg-agent.exe contains some configuration options so we can adjust this behavior.
+
+1. List all of gpg-agent.exe current configuration options using the following:
+    `gpgconf --list-options gpg-agent`
+
+1. The options we need to configure are `default-cache-ttl` and `max-cache-ttl`. Both of these are configured with the number of seconds to cache the passphrase. The screenshot below shows the default values for both configuration options; `default-cache-ttl` set to 600, and `max-cache-ttl` set to 7200.
+
+1. Create conf file:
+    `vim ~/.gnupg/gpg-agent.conf`
+
+1. Add the following text:
+
+```
+default-cache-ttl 86400
+default-cache-ttl-ssh 86400
+max-cache-ttl 86400
+max-cache-ttl-ssh 86400
+```
+1. Reload gpg:
+    `gpgconf --kill gpg-agent`
+
+1. Verify properties
+    `gpgconf --list-options gpg-agent`
 
 ### GIT with GPG to have verify commits
 
@@ -131,7 +159,7 @@ https://docs.github.com/en/authentication/managing-commit-signature-verification
 
 3. Add your GPG public key to Github
 
-## Telling Git about your signing key
+### Telling Git about your signing key
 
 1. If you have previously configured Git to use a different key format when signing with --gpg-sign, unset this configuration so the default format of openpgp will be used.
 	`git config --global --unset gpg.format`
@@ -152,3 +180,51 @@ https://docs.github.com/en/authentication/managing-commit-signature-verification
 	```bash
 	git config --local user.email "github_commit_email@users.noreply.github.com" ; git config --local user.name "change_me" ; git config --local --unset gpg.format ; git config --local user.signingkey 3BB5C34371567XF2
   ```
+
+
+## Pass Basic Tutorial
+
+https://medium.com/@davidpiegza/using-pass-in-a-team-1aa7adf36592
+
+1. Generate a GPG Key, you must provide an email and remember it
+	`gpg --full-generate-key`
+
+1. Initialize pass by adding associated to the email provided to create the gpg key:
+    `pass init -p <store name> <email used to create the gpg key>`
+	For example:
+	`pass init -p newPasswordStore my@email.com`
+
+    >Note: You can check the initialized password store under `${HOME}/.password-store/`
+
+1. Add a new password to the store, you will be prompted to add the secrets
+    `pass insert random_folder/AWS_ACCOUNT_NUMBER`
+    `pass insert random_folder/AWS_PROFILE`
+    `pass insert random_folder/AWS_REGION (us-west-1)`
+    `pass insert random_folder/DEMO_TENANT)`
+    `pass insert random_folder/GITHUB_OAUTH_TOKEN`
+    `pass insert random_folder/NEW_S3_BUCKET`
+    `pass insert random_folder/OLD_S3_BUCKET`
+
+1. Add multiple secrets into 1 secret
+`pass insert -m random_folder/AWS_ENV_VARS`
+
+1. Following the example on point 3 you can now export the variable referencing the values stored on Pass
+    `export AWS_REGION=$(pass random_folder/AWS_REGION)`
+    `export TENANT=$(pass random_folder/DEMO_TENANT)`
+    `export AWS_ACCESS_KEY=$(pass random_folder/AWS_ACCESS_KEY)`
+    `export AWS_SECRET_ACCESS_KEY=$(pass random_folder/AWS_SECRET_ACCESS_KEY)`
+    `export GITHUB_OAUTH_TOKEN=$(pass random_folder/GITHUB_OAUTH_TOKEN)`
+
+Now you can export the variables using eval
+`eval $(pass random_folder/AWS_ENV_VARS)`
+
+Retrieving password
+`pass random_folder/AWS_ACCOUNT_NUMBER`
+
+Edit passwords:
+`pass edit aws_env_vars`
+
+
+### Clone existing pass repos
+
+1. mkdir -p  ~/.password-store/
