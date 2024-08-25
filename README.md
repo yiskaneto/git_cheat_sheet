@@ -162,24 +162,29 @@ https://docs.github.com/en/authentication/managing-commit-signature-verification
 ### Telling Git about your signing key
 
 1. If you have previously configured Git to use a different key format when signing with --gpg-sign, unset this configuration so the default format of openpgp will be used.
-	`git config --global --unset gpg.format`
+
+    `git config --global --unset gpg.format`
 
 1. To set your primary GPG signing key in Git, paste the text below, substituting in the GPG primary key ID you'd like to use. In this example, the GPG key ID is the one from before `3AA5C34371567BD2`:
-	`git config --global user.signingkey 3BB5C34371567XF2`
+
+    `git config --global user.signingkey 3BB5C34371567XF2`
 
 1. Optionally, to configure Git to sign all commits by default, enter the following command:
-	`git config --global commit.gpgsign true`
+
+    `git config --global commit.gpgsign true`
 
 1. Finally, add your GPG key to your .bashrc startup file:
-	```bash
+
+    ```bash
 	[ -f ~/.bashrc ] && echo 'export GPG_TTY=$(tty)' >> ~/.bashrc
 	source ~/.bashrc
 	```
+
 1. If there's another user set in the global configuration then explicitly set the correct username and email:
-2.
+
 	```bash
 	git config --local user.email "github_commit_email@users.noreply.github.com" ; git config --local user.name "change_me" ; git config --local --unset gpg.format ; git config --local user.signingkey 3BB5C34371567XF2
-  ```
+    ```
 
 
 ## Pass Basic Tutorial
@@ -205,7 +210,7 @@ https://medium.com/@davidpiegza/using-pass-in-a-team-1aa7adf36592
     `pass insert random_folder/NEW_S3_BUCKET`
     `pass insert random_folder/OLD_S3_BUCKET`
 
-- Add multiple secrets into 1 secret
+1. Add multiple secrets into 1 secret
     `pass insert -m random_folder/AWS_ENV_VARS`
 
 - Following the example on point 3 you can now export the variable referencing the values stored on Pass
