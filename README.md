@@ -192,41 +192,55 @@ https://docs.github.com/en/authentication/managing-commit-signature-verification
 https://medium.com/@davidpiegza/using-pass-in-a-team-1aa7adf36592
 
 1. Generate a GPG Key, you must provide an email and remember it
-	`gpg --full-generate-key`
+
+    `gpg --full-generate-key`
 
 1. Initialize pass by adding associated to the email provided to create the gpg key:
+
     `pass init -p <store name> <email used to create the gpg key>`
-	For example:
-	`pass init -p newPasswordStore my@email.com`
+
+    For example:
+
+    `pass init -p newPasswordStore my@email.com`
 
     >Note: You can check the initialized password store under `${HOME}/.password-store/`
 
 1. Add a new password to the store, you will be prompted to add the secrets
-    `pass insert random_folder/AWS_ACCOUNT_NUMBER`
-    `pass insert random_folder/AWS_PROFILE`
-    `pass insert random_folder/AWS_REGION (us-west-1)`
-    `pass insert random_folder/DEMO_TENANT)`
-    `pass insert random_folder/GITHUB_OAUTH_TOKEN`
-    `pass insert random_folder/NEW_S3_BUCKET`
-    `pass insert random_folder/OLD_S3_BUCKET`
+
+    ```bash
+    pass insert random_folder/AWS_ACCOUNT_NUMBER
+    pass insert random_folder/AWS_PROFILE
+    pass insert random_folder/AWS_REGION (us-west-1)
+    pass insert random_folder/DEMO_TENANT)
+    pass insert random_folder/GITHUB_OAUTH_TOKEN
+    pass insert random_folder/NEW_S3_BUCKET
+    pass insert random_folder/OLD_S3_BUCKET
+    ```
 
 1. Add multiple secrets into 1 secret
+
     `pass insert -m random_folder/AWS_ENV_VARS`
 
 - Following the example on point 3 you can now export the variable referencing the values stored on Pass
-    `export AWS_REGION=$(pass random_folder/AWS_REGION)`
-    `export TENANT=$(pass random_folder/DEMO_TENANT)`
-    `export AWS_ACCESS_KEY=$(pass random_folder/AWS_ACCESS_KEY)`
-    `export AWS_SECRET_ACCESS_KEY=$(pass random_folder/AWS_SECRET_ACCESS_KEY)`
-    `export GITHUB_OAUTH_TOKEN=$(pass random_folder/GITHUB_OAUTH_TOKEN)`
+
+    ```bash
+    export AWS_REGION=$(pass random_folder/AWS_REGION)
+    export TENANT=$(pass random_folder/DEMO_TENANT)
+    export AWS_ACCESS_KEY=$(pass random_folder/AWS_ACCESS_KEY)
+    export AWS_SECRET_ACCESS_KEY=$(pass random_folder/AWS_SECRET_ACCESS_KEY)
+    export GITHUB_OAUTH_TOKEN=$(pass random_folder/GITHUB_OAUTH_TOKEN)
+    ```
 
 - Now you can export the variables using eval
+
     `eval $(pass random_folder/AWS_ENV_VARS)`
 
 - Retrieving password
+
     `pass random_folder/AWS_ACCOUNT_NUMBER`
 
 - Edit passwords:
+
     `pass edit aws_env_vars`
 
 
